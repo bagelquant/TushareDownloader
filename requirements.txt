@@ -1,0 +1,4 @@
+pandas~=2.2.1
+tushare~=1.4.5
+pymysql~=1.1.0
+sqlalchemy~=2.0.28

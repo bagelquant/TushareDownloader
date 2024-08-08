@@ -1,0 +1,10 @@
+{
+  "tushare_token": "YOUR_TOKEN",
+  "database_config": {
+    "host": "localhost",
+    "port": 3306,
+    "user": "root",
+    "password": "YOUR_PASSWORD",
+    "database": "tushare"
+  }
+}
