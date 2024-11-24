@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bageltushare"
+version = "0.0.1"
+authors = [
+  { name="Yanzhong Huang", email="eric.yanzhong.huang@gmail.com" },
+]
+description = "A package for download China A market stock data using tushare api, and automatically store to a local database"
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+Homepage = "https://github.com/bagelquant/bageltushare"
+Issues = "https://github.com/bagelquant/bageltushare/issues"
