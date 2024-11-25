@@ -21,19 +21,38 @@ class Query:
         """query stock list from database"""
         with self.engine.connect() as con:
             result = con.execute(text('SELECT ts_code FROM stock_basic')).fetchall()
-            return [row[0] for row in result]
+            return [row[0] for row in result if row[0] is not None]
+
+    def stock_list_us(self) -> list[str]:
+        """query stock list from database"""
+        with self.engine.connect() as con:
+            result = con.execute(text('SELECT ts_code FROM us_basic')).fetchall()
+            return [row[0] for row in result if row[0] is not None]
 
     def trade_cal(self, start_date: datetime, end_date: datetime) -> list[datetime]:
         """query trade calendar from database sort by cal_date"""
         with self.engine.connect() as con:
             result = con.execute(text(f"""
-            SELECT cal_date 
-            FROM trade_cal 
-            WHERE is_open=1 
-            AND cal_date BETWEEN '{start_date.strftime('%Y%m%d')}' AND '{end_date.strftime('%Y%m%d')}'
-            ORDER BY cal_date
-            """)).fetchall()
+                                      SELECT cal_date 
+                                      FROM trade_cal 
+                                      WHERE is_open=1 
+                                      AND cal_date BETWEEN '{start_date.strftime('%Y%m%d')}' AND '{end_date.strftime('%Y%m%d')}'
+                                      ORDER BY cal_date
+                                      """)).fetchall()
             return [row[0] for row in result]
+
+    def trade_cal_us(self, start_date: datetime, end_date: datetime) -> list[datetime]:
+        """query trade calendar from database sort by cal_date"""
+        with self.engine.connect() as con:
+            result = con.execute(text(f"""
+                                      SELECT cal_date 
+                                      FROM us_tradecal 
+                                      WHERE is_open=1 
+                                      AND cal_date BETWEEN '{start_date.strftime('%Y%m%d')}' AND '{end_date.strftime('%Y%m%d')}'
+                                      ORDER BY cal_date
+                                      """)).fetchall()
+            return [row[0] for row in result]
+
 
     def end_date_in_log(self, api_name: str, ts_code: str) -> datetime | None:
         """query end_date in log table"""
@@ -45,5 +64,5 @@ class Query:
                 WHERE table_name='{api_name}' AND ts_code='{ts_code}' 
                 AND message='success'
                 """
-            )).fetchone()
+                )).fetchone()
             return result[0]

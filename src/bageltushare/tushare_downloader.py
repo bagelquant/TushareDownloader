@@ -46,18 +46,20 @@ def update_and_replace(token: str,
 def _single_date_update(token: str,
                         database: Database,
                         api_name: str,
-                        trade_date: datetime) -> None:
+                        trade_date: datetime,
+                        **kwargs) -> None:
     """
     Single date update
     :param token: Tushare token
     :param database: Database object with sqlalchemy engine
     :param api_name: tushare api name, same with table name in database
     :param trade_date: trade date to update
+    :param kwargs: arguments for tushare api
     """
     try:
         # download data
         tushare_api = TushareAPI(token)
-        df = tushare_api.download(api_name, trade_date=trade_date.strftime('%Y%m%d'))
+        df = tushare_api.download(api_name, trade_date=trade_date.strftime('%Y%m%d'), **kwargs)
 
         # save and log
         saver_logger = SaverLogger(database.get_engine(), api_name, df)
@@ -71,7 +73,7 @@ def _single_date_update(token: str,
 
         # retry in 60s
         time.sleep(60)
-        _single_date_update(token, database, api_name, trade_date)
+        _single_date_update(token, database, api_name, trade_date, **kwargs)
 
 
 def _single_code_update(token: str,
@@ -157,6 +159,43 @@ def date_loop_update(token: str,
         for trade_date in trade_cal:
             executor.submit(_single_date_update, token, database, api_name, trade_date)
 
+
+def date_loop_update_us(token: str,
+                        database: Database,
+                        api_name: str,
+                        max_workers: int = 10,
+                        **kwargs) -> None:
+    """
+    Loop date update us trade cal
+    :param token: Tushare token
+    :param database: Database object with sqlalchemy engine
+    :param api_name: tushare api name, same with table name in database
+    :param max_workers: max workers for ThreadPoolExecutor
+    :param kwargs: arguments for tushare api
+
+    query trade_cal
+    loop through last date to today
+    """
+    # query last_date in database
+    query = Query(database.get_engine())
+    start_date = query.end_date_in_log(api_name, ts_code='all')
+    if start_date is None:
+        start_date = datetime(2000, 1, 1)
+    else:
+        start_date += timedelta(days=1)
+    end_date = datetime.now()
+
+    # end_date need to later than start_date
+    if end_date < start_date:
+        print(f'{api_name} already up to date')
+        return
+    # query trade_cal
+    trade_cal = query.trade_cal_us(start_date, end_date)
+
+    # loop through trade_cal using multi-thread
+    with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        for trade_date in trade_cal:
+            executor.submit(_single_date_update, token, database, api_name, trade_date, **kwargs)
 
 def code_loop_update(token: str,
                      database: Database,
