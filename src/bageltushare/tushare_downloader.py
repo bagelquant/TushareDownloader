@@ -11,6 +11,7 @@ from .save_and_log import SaverLogger
 from .database import Database
 from .query import Query
 
+import pandas as pd
 from datetime import datetime, timedelta
 from pandas import DataFrame
 from concurrent.futures import ThreadPoolExecutor
@@ -33,6 +34,45 @@ def update_and_replace(token: str,
         df = tushare_api.download(api_name, **kwargs)
 
         # save and log
+        saver_logger = SaverLogger(database.get_engine(), api_name, df)
+        saver_logger.save('replace')
+        saver_logger.log(message='success', ts_code='all', end_date=datetime.now())
+        print(f'{api_name} updated and replaced')
+    except Exception as e:
+        saver_logger = SaverLogger(database.get_engine(), api_name, DataFrame())
+        saver_logger.log(message='fail', ts_code='all', end_date=datetime.now())
+        print(f'{api_name} update Error: {e}')
+
+
+def update_and_replace_concat(token: str,
+                              database: Database,
+                              api_name: str,
+                              offset: int,
+                              **kwargs) -> None:
+    """
+    Update and replace table in database
+    :param token: Tushare token
+    :param database: Database object with sqlalchemy engine
+    :param api_name: tushare api name, same with table name in database
+    :param kwargs: arguments for tushare api
+    """
+    try:
+        # download data
+        tushare_api = TushareAPI(token)
+        df = tushare_api.download(api_name, **kwargs)
+        df_2 = pd.DataFrame()
+        offset_option = 0
+        while df_2.empty:
+            offset_option += offset
+            kwargs['offset'] = offset_option
+            df_2 = tushare_api.download(api_name, **kwargs)
+            if df_2.empty:
+                break
+            df = pd.concat([df, df_2])
+            df_2 = pd.DataFrame()
+
+        # save and log
+        df.reset_index(drop=True, inplace=True)
         saver_logger = SaverLogger(database.get_engine(), api_name, df)
         saver_logger.save('replace')
         saver_logger.log(message='success', ts_code='all', end_date=datetime.now())
