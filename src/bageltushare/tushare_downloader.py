@@ -179,3 +179,4 @@ def code_loop_update(token: str,
     with ThreadPoolExecutor(max_workers=max_workers) as executor:
         for ts_code in stock_list:
             executor.submit(_single_code_update, token, database, api_name, ts_code)
+

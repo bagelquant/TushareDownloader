@@ -8,7 +8,7 @@ import json
 import os
 from unittest import TestCase
 
-from TushareDownloader.tushare_api import TushareAPI
+from src.bageltushare.tushare_api import TushareAPI
 
 
 class TestTushareAPI(TestCase):

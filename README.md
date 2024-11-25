@@ -1,12 +1,12 @@
 # TushareDownloader
 A packege for download China A market stock data using tushare api, and automatically store to a local database 
 
-Full documents please refer to: [BagelQuant](https://bagelquant.com/tusharedownloader)
+Full documents please refer to: [BagelQuant](https://bagelquant.com/bageltushare)
 
 # Installation
 
 ```bash
-pip install TushareDownloader
+pip install bageltushare
 ```
 
 # Usage
@@ -14,7 +14,7 @@ pip install TushareDownloader
 ## Quick start
 
 ```python
-from TushareDownloader import MySQL, create_log_table, update_and_replace
+from bageltushare import MySQL, create_log_table, update_and_replace
 
 # Initialize a MySQL object, will support other database in upcoming release
 mysql_config = {

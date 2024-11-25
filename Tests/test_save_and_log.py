@@ -8,8 +8,8 @@ import json
 import os
 from unittest import TestCase
 
-from TushareDownloader.database import MySQL
-from TushareDownloader.save_and_log import create_log_table
+from src.bageltushare.database import MySQL
+from src.bageltushare.save_and_log import create_log_table
 from sqlalchemy import text
 
 

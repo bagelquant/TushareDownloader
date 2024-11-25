@@ -1,6 +1,0 @@
-pandas
-tushare
-pymysql
-sqlalchemy
-build
-twine

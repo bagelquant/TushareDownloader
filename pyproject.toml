@@ -1,7 +1,6 @@
 [build-system]
 requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
-
 [project]
 name = "bageltushare"
 version = "0.0.1"
@@ -16,7 +15,15 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
+dependencies = [
+    "pandas>=2.2.0",
+    "tushare>=1.4.0",
+    "pymysql>=1.1.1",
+    "sqlalchemy>=2.0.0",
+    "cryptography>=43.0.0"
+]   
 
 [project.urls]
 Homepage = "https://github.com/bagelquant/bageltushare"
 Issues = "https://github.com/bagelquant/bageltushare/issues"
+

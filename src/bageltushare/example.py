@@ -5,7 +5,7 @@ Email: bagelquant@gmail.com
 """
 
 from time import time
-from TushareDownloader import MySQL, create_log_table, update_and_replace, date_loop_update, code_loop_update
+from bageltushare import MySQL, create_log_table, update_and_replace, date_loop_update, code_loop_update
 
 
 def main():

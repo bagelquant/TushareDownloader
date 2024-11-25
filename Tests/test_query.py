@@ -5,10 +5,11 @@ Email: bagelquant@gmail.com
 """
 import os
 import json
+import unittest
 from unittest import TestCase
 
-from TushareDownloader.query import Query
-from TushareDownloader import MySQL
+from src.bageltushare.query import Query
+from src.bageltushare.database import MySQL
 from datetime import datetime
 
 
@@ -29,3 +30,6 @@ class TestQuery(TestCase):
 
     def test_end_date_in_log(self):
         print(self.query.end_date_in_log('stock_basic', 'all'))
+
+if __name__ == '__main__':
+    unittest.main()

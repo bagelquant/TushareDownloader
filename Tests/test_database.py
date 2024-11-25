@@ -9,7 +9,7 @@ import json
 import os
 from unittest import TestCase
 
-from TushareDownloader.database import MySQL
+from src.bageltushare.database import MySQL
 from sqlalchemy import text
 
 
