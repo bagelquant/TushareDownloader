@@ -99,7 +99,21 @@ def _single_date_update(token: str,
     try:
         # download data
         tushare_api = TushareAPI(token)
-        df = tushare_api.download(api_name, trade_date=trade_date.strftime('%Y%m%d'), **kwargs)
+        # add offset option
+        if 'offset' in kwargs:
+            off_set_record = kwargs['offset']
+            kwargs['offset'] = 0
+            df = tushare_api.download(api_name, trade_date=trade_date.strftime('%Y%m%d'), **kwargs)
+            df_2 = pd.DataFrame()
+            while df_2.empty:
+                kwargs['offset'] += off_set_record
+                df_2 = tushare_api.download(api_name, trade_date=trade_date.strftime('%Y%m%d'), **kwargs)
+                if df_2.empty:
+                    break
+                df = pd.concat([df, df_2])
+                df_2 = pd.DataFrame()
+        else:
+            df = tushare_api.download(api_name, trade_date=trade_date.strftime('%Y%m%d'), **kwargs)
 
         # save and log
         saver_logger = SaverLogger(database.get_engine(), api_name, df)
@@ -236,6 +250,7 @@ def date_loop_update_us(token: str,
     with ThreadPoolExecutor(max_workers=max_workers) as executor:
         for trade_date in trade_cal:
             executor.submit(_single_date_update, token, database, api_name, trade_date, **kwargs)
+
 
 def code_loop_update(token: str,
                      database: Database,
