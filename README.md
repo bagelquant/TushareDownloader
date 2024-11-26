@@ -1,12 +1,13 @@
-# TushareDownloader
-A packege for download China A market stock data using tushare api, and automatically store to a local database 
+# bagel-tushare
+
+A Python wrapper for Tushare, a Chinese financial data provider. The project provides a simple and easy-to-use automation tool for **downloading** financial data from Tushare, and **storing** the data in a local mysql database.
 
 Full documents please refer to: [BagelQuant](https://bagelquant.com/bageltushare)
 
 # Installation
 
 ```bash
-pip install bageltushare
+pip install bagelTushare
 ```
 
 # Usage
@@ -45,8 +46,8 @@ update_and_replace(token=token,             # required
 
 The `update_and_replace` function utilizes the tushare API to download data, which is then automatically stored in a local database. There's no need to create a database table structure, as the table name will be the same as the api_name.
 
+> [!WARNING]  
 > Be aware that this function will replace the original data in the database
->
 
 **This function has three required parameters:**
 
@@ -56,8 +57,6 @@ The `update_and_replace` function utilizes the tushare API to download data, whi
 - `api_name: str` , the tushare API name. For more information, please refer to the tushare documents [Tushare Doc](https://tushare.pro/document/2)
 
 ## Loop update
-
----
 
 This package provides two methods for multi-threaded looping downloads:
 
@@ -78,8 +77,8 @@ def date_loop_update(token: str,
     ...
 ```
 
-> Initially, this method requires the **trade_cal** table. Use `update_and_replace` to download the **trade_cal** table.
->
+> [!IMPORTANT]  
+> This method requires the **trade_cal** or **us_tradecal** table. Use `update_and_replace` to download the table.
 
 The function process includes:
 
@@ -125,8 +124,8 @@ def code_loop_update(token: str,
     ...
 ```
 
-> Initially, this method requires the **stock_basic** table. Use `update_and_replace` to download the **stock_basic** table.
->
+> [!IMPORTANT]  
+> Initially, this method requires the **stock_basic** or **us_basic** table. Use `update_and_replace` to download the table.
 
 The function process includes:
 
@@ -163,3 +162,4 @@ def monthly_update():
 - Both methods use multi-threading; this may exceed Tushare API usage limits per minute. If limits are exceeded, the looping will pause for one minute and then continue.
 - Some Tushare APIs require a 'ts_code' as input. In such cases, use the 'code_loop_update' method. Example: balancesheet.
 - For price data, which doesn't require 'ts_code' as input, use the 'date_loop_update' method.
+
