@@ -6,6 +6,7 @@ Email: bagelquant@gmail.com
 
 import json
 import os
+import unittest
 from unittest import TestCase
 
 from src.bageltushare.database import MySQL
@@ -31,3 +32,8 @@ class TestSaverLogger(TestCase):
 
             # clean up
             con.execute(text('DROP TABLE if EXISTS log'))
+
+
+if __name__ == '__main__':
+    unittest.main()
+

@@ -4,6 +4,7 @@ Author: Yanzhong Huang
 Email: bagelquant@gmail.com
 """
 
+import unittest
 import json
 import os
 from unittest import TestCase
@@ -30,3 +31,7 @@ class TestTushareAPI(TestCase):
         self.assertEqual(df.shape[1], 6)
         self.assertGreater(df.shape[0], 0)
         print(df.head())
+
+if __name__ == '__main__':
+    unittest.main()
+
